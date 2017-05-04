@@ -1,12 +1,11 @@
-// ScatterPlot
-
 
 var BubbleChart = function() {
-    // Set default values
     var height = 500,
         width = 960,
-        title = 'Chart title',
+        title = 'Chart Title',
         diameter = 900,
+        text = 'id',
+        colorScheme = 'schemeCategory20',
         margin = {
                 top: 10,
                 right: 10,
@@ -14,18 +13,13 @@ var BubbleChart = function() {
                 left: 5
             };
 
-    // Function returned by ScatterPlot
     var chart = function(selection) {
-        // Height/width of the drawing area itself
         var chartHeight = height - margin.bottom - margin.top;
         var chartWidth = width - margin.left - margin.right;
 
-        // Iterate through selections, in case there are multiple
         selection.each(function(data) {
-            // Use the data-join to create the svg (if necessary)
             var ele = d3.select(this);
             var svg = ele.selectAll("svg").data([data]);
-            // Append static elements (i.e., only added once)
 
             var tooltip = svg.append("div")
                             .attr("class", "tooltip")
@@ -41,23 +35,20 @@ var BubbleChart = function() {
             svgEnter.append('text')
                 .attr('transform', 'translate(' + (margin.left + chartWidth / 2) + ',' + 20 + ')')
                 .text(title)
-                .attr('class', 'chart-title')
-            // g element for markers
+                .attr('class', 'chart-title');
+
             var g = svgEnter.append('g')
                 .attr('height', diameter)
                 .attr('width', diameter)
                 .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
                 .attr("class", 'chartG');
             
-            // Nest your data *by region* using d3.nest()
             var nestedData = d3.nest()
                 .key(function(d) {
                     return d.category;
                 })
                 .entries(data);
         
-            
-            // Define a hierarchy for your data
             var root = d3.hierarchy({
                 values: nestedData
             }, function(d) {
@@ -65,18 +56,15 @@ var BubbleChart = function() {
             });
 
 
-            // Create a *treemap function* that will compute your layout given your data structure
-            var pack = d3.pack() // function that returns a function!
-                .size([diameter, diameter]) // set size: scaling will be done internally
-                .padding(0);
+            var pack = d3.pack() 
+                .size([diameter, diameter])
+                .padding(2);
 
-            // Get list of regions for colors
             var categories = nestedData.map(function(d) {
                 return d.key;
             });
 
-            // Set an ordinal scale for colors
-            var colorScale = d3.scaleOrdinal().domain(categories).range(d3.schemeCategory10);
+            var colorScale = d3.scaleOrdinal().domain(categories).range(d3[colorScheme]);
 
             root.sum(function(d) {
                 return +d.measure;
@@ -84,7 +72,6 @@ var BubbleChart = function() {
                 return b.value - a.value;
             });
 
-            // (Re)build your treemap data structure by passing your `root` to your `treemap` function
             pack(root);
 
             var nodes = g.selectAll(".node").data(root.leaves()).enter();
@@ -94,8 +81,9 @@ var BubbleChart = function() {
                     .text(function(d) {
                         return d.data.id;  // Value of the text
                     });
-            }
-            // Enter and append elements, then position them using the appropriate *styles*
+            };
+
+
             nodes.append("circle")
                 .merge(nodes)
                 .attr('class', 'node')
@@ -105,7 +93,7 @@ var BubbleChart = function() {
                     .attr("x", d.x)
                     .attr("y", d.y + 5)
                     .style("text-anchor", "middle")
-                    .text(d.data.id);  // Value of the text
+                    .text(d.data[text]);  // Value of the text
                 })
                 .on("mouseout", function(d) {
                     nodes.selectAll(".text").remove()
@@ -126,14 +114,12 @@ var BubbleChart = function() {
                 .attr("fill", function(d) {
                     return colorScale(d.data.category);
                 });
-
-
                           
                 nodes.exit().remove();
+
         });
     };
 
-    // Getter/setter methods to change locally scoped options
     chart.height = function(value) {
         if (!arguments.length) return height;
         height = value;
@@ -155,6 +141,12 @@ var BubbleChart = function() {
     chart.diameter = function(value) {
         if (!arguments.length) return diameter;
         diameter = value;
+        return chart;
+    };
+
+    chart.text = function(value) {
+        if (!arguments.length) return diameter;
+        text = value;
         return chart;
     };
 
