@@ -1,4 +1,3 @@
-
 $(function() {
     var xVar = 'gdp';
     var chartData;

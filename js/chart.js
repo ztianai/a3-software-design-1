@@ -145,8 +145,14 @@ var BubbleChart = function() {
     };
 
     chart.text = function(value) {
-        if (!arguments.length) return diameter;
+        if (!arguments.length) return text;
         text = value;
+        return chart;
+    };
+
+    chart.colorScheme = function(value) {
+        if (!arguments.length) return colorScheme;
+        colorScheme = value;
         return chart;
     };
 
