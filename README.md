@@ -7,9 +7,8 @@ Bubblechart can be utilized in order to generate packed bubble charts easily in 
 To get started, it is necessary to ensure data is formatted correctly. Follow these steps to prep
 your data and create your own bubble chart!
 
-Step 1: Load the data
-Step 2: Format the data by using map to create a new dataset. It is important in your map function 
-    to return your measure, id, and category. These will be the three values necessary to create a bubble chart. The measure will be the size of your circles, id will be the identifier in the dataset, and category will be the value that your bubbles will be grouped together by. An example would be 
+Step 1: Create a javascript function that reads in data.
+Step 2: Witih in that data, format the data by using map to create a new dataset. It is important       in your map function to return your measure, id, and category. These will be the three values       necessary to create a bubble chart. The measure will be the size of your circles, id will be        the identifier in the dataset, and category will be the value that your bubbles will be grouped     together by. An example would be 
 
     myData = data.map(function(d) {
                 return {
@@ -18,7 +17,7 @@ Step 2: Format the data by using map to create a new dataset. It is important in
                     category: d.category
                 };
 
-Step 3: Then you can create the chart by creating a variable that stores BubbleChart(). Additional parameters on BubbleChart() that can be added are title, width, hieght, diameter, and text. 
+Step 3: Then you can create the chart by creating a variable that stores BubbleChart(). Additional      parameters on BubbleChart() that can be added are title, width, hieght, diameter, and text. 
     title: Sets the title of the chart. Takes in a string object and will place the title on top of 
         the chart. Default is 'Chart Title'.
     width: Sets the width of the area for the chart (in pixels). Takes in a number of pixels to set
@@ -33,7 +32,7 @@ Step 3: Then you can create the chart by creating a variable that stores BubbleC
     colorScheme: Sets the d3 color scheme for the chart. Default is set to 'schemeCategory20'.
     ex. var bubble = BubbleChart();
 
-Step 4: Create the chart by selecting the area in your html you want to generate the chart and calling datum() with your data from step 2, as well as a call() on your BubbleChart() variable.
+Step 4: Create the chart by selecting the area in your html you want to generate the chart and      calling datum() with your data from step 2, as well as a call() on your BubbleChart() variable.
     Ex. var chart = d3.select("#vis")
             .datum(myData)
             .call(bubble);
