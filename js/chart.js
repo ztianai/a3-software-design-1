@@ -74,7 +74,7 @@ var BubbleChart = function() {
 
             pack(root);
 
-            var nodes = g.selectAll(".node").data(root.leaves()).enter();
+            var nodes = ele.select('.chartG').selectAll(".node").data(root.leaves());
 
             function mouseover() {  // Add interactivity
                 nodes.append("text")
@@ -84,7 +84,7 @@ var BubbleChart = function() {
             };
 
 
-            nodes.append("circle")
+            nodes.enter().append("circle")
                 .merge(nodes)
                 .attr('class', 'node')
                 .on("mouseover", function(d){
